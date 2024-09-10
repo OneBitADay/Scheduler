@@ -1,6 +1,7 @@
 package service;
 
 import model.Event;
+import model.Person;
 
 import java.util.Date;
 import java.util.List;
@@ -9,7 +10,7 @@ public interface EventService {
 
     Event createEvent(Event event);
 
-    Event createEvent(enum eventType, enum typeOfService, String nameOfEvent, String address, Date start, Date end, Person person);
+    Event createEvent(String eventType, String typeOfService, String nameOfEvent, String address, Date start, Date end, Person person);
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     List<Event> getEventsForPerson(String name, Date start, Date end);
@@ -28,7 +29,7 @@ public interface EventService {
 
     Event updateEvent(Event newEvent);
 
-    Event rescheduleEvent(Event event, date start, Date end);
+    Event rescheduleEvent(Event event, Date start, Date end);
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 

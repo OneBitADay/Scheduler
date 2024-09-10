@@ -1,12 +1,15 @@
 package service;
 
+import model.Event;
 import model.Person;
+
+import java.util.List;
 
 public interface PersonService {
 
     Person createPerson(Person person);
 
-    Person createPerson(String fname, Sstring lname, String email, int age);
+    Person createPerson(String fname, String lname, String email, int age);
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     Person getPerson(String name);

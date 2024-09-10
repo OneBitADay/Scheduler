@@ -3,6 +3,7 @@ package model;
 import java.util.Date;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 /**
  * Event is catorgarized as local event (wedding, birthday, get-together,etc) OR
@@ -35,5 +36,6 @@ public class Event {
 
     Date dateEnd; // date of ending DATE and TIME
 
+    @ManyToOne
     Person person; // The person scheduling the event (Use id instead?)
 }

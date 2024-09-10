@@ -2,6 +2,9 @@ package model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+
+import java.util.List;
 
 @Entity
 public class Person {
@@ -16,6 +19,7 @@ public class Person {
 
     int age;
 
+    @OneToMany
     List<Event> events;
 
     private int computeAge() {//takes a date obj from above
