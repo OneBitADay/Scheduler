@@ -1,6 +1,11 @@
 package model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
 public class Person {
+    @Id
     String id;
 
     String fname;

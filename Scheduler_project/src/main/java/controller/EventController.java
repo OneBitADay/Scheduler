@@ -16,6 +16,6 @@ public class EventController {
 
     @GetMapping("/{name} , produces = application/json")
     public List<Event> getEvents(@PathVariable String name, @RequestParam Date start, @RequestParam Date end) {
-        return eventService.getEventsForPerson(name, start,end);
+        return eventService.getEventsForPerson(name, start, end);
     }
 }

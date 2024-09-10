@@ -1,11 +1,14 @@
 package model;
 
 import java.util.Date;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
 /**
  * Event is catorgarized as local event (wedding, birthday, get-together,etc) OR
  *
  */
+@Entity
 public class Event {
     enum EVENTTYPES {
         AWAYEVENT, //Services
@@ -19,6 +22,7 @@ public class Event {
 
     }
 
+    @Id
     String id;
 
     String nameeOfEvent;
