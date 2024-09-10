@@ -19,6 +19,8 @@ public class Event {
 
     }
 
+    String id;
+
     String nameeOfEvent;
 
     String address; // TODO should address be it's own class? Maybe Address class?
@@ -28,4 +30,6 @@ public class Event {
     Date dateStart; // date of starting DATE and TIME
 
     Date dateEnd; // date of ending DATE and TIME
+
+    Person person; // The person scheduling the event (Use id instead?)
 }
