@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import runner.model.User;
+import runner.response.UserResponse;
 import runner.service.UserService;
 
 import java.util.List;
@@ -26,8 +27,14 @@ public class UserController {
 
 
     @GetMapping(value = "/user/{userid}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> getUser(@PathVariable String userid) {
-        return new ResponseEntity<>(userService.getUser(userid), HttpStatus.ACCEPTED);
+    @ResponseBody
+    public UserResponse getUser(@PathVariable String userid) {
+        User user = userService.getUser(userid);
+        return UserResponse.Builder.newInstance()
+                           .setUserId(userid)
+                           .setFirstName(user.getFname())
+                           .setLastName(user.getLname())
+                           .build();
     }
 
     @DeleteMapping("/user/{userid}")
@@ -41,10 +48,9 @@ public class UserController {
     }
 
 
-    @PostMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public String persistUser(@RequestBody User user) {
-        User tempPerson =  userService.persistUser(new User(
+    @PostMapping(value = "/user")
+    public ResponseEntity<Boolean> persistUser(@RequestBody User user) {
+        userService.persistUser(new User(
                 user.getFname(),
                 user.getLname(),
                 user.getEmail(),
@@ -52,7 +58,6 @@ public class UserController {
                 user.getDobHolder(),
                 user.getPassword()
         ));
-        //return new ResponseEntity<>(tempPerson, HttpStatus.CREATED);
-        return "FirstName: " + tempPerson.getFname() + " LastName: " + tempPerson.getLname() + " Email: " + tempPerson.getEmail() + " UserID: " + tempPerson.getUserid();
+        return new ResponseEntity<>(true, HttpStatus.CREATED);
     }
 }
