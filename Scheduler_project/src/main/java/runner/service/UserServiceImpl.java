@@ -2,7 +2,7 @@ package runner.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import runner.Execeptions.*;
+import runner.Execeptions.userExceptions.*;
 import runner.model.User;
 import runner.repository.UserRepository;
 

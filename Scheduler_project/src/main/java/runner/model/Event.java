@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Event is catorgarized as local event (wedding, birthday, get-together,etc) OR
@@ -26,9 +28,9 @@ public class Event {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    UUID id;
 
+    @Column(name = "name_of_event", nullable = false)
     String nameeOfEvent;
 
     String address; // TODO should address be it's own class? Maybe Address class?
@@ -38,4 +40,6 @@ public class Event {
     Date dateStart; // date of starting DATE and TIME
 
     Date dateEnd; // date of ending DATE and TIME
+
+    List<User> eventAttendees;
 }

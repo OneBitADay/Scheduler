@@ -1,4 +1,4 @@
-package runner.Execeptions;
+package runner.Execeptions.userExceptions;
 
 public class UserAlreadyExists extends RuntimeException {
 
