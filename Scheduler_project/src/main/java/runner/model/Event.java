@@ -1,4 +1,7 @@
-package model;
+package runner.model;
+
+import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.Date;
 
@@ -6,6 +9,9 @@ import java.util.Date;
  * Event is catorgarized as local event (wedding, birthday, get-together,etc) OR
  *
  */
+@Data
+@Entity
+@Table(name = "event")
 public class Event {
     enum EVENTTYPES {
         AWAYEVENT, //Services
@@ -18,6 +24,10 @@ public class Event {
     enum TYPEOFSERVICE {
 
     }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
 
     String nameeOfEvent;
 
