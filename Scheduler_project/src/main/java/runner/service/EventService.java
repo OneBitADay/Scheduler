@@ -1,5 +1,8 @@
 package runner.service;
 
-public interface EventService  {
+import runner.model.Event;
 
+public interface EventService  {
+    Event persistEvent(Event event);
+    Event getEvent(String eventid);
 }
