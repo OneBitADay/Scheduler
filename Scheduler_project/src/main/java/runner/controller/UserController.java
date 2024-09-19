@@ -2,6 +2,7 @@ package runner.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import runner.model.User;
@@ -24,7 +25,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/user/{userid}")
+    @GetMapping(value = "/user/{userid}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> getUser(@PathVariable String userid) {
         return new ResponseEntity<>(userService.getUser(userid), HttpStatus.ACCEPTED);
     }
@@ -40,8 +41,9 @@ public class UserController {
     }
 
 
-    @PostMapping("/user")
-    public ResponseEntity<User> persistUser(@RequestBody User user) {
+    @PostMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String persistUser(@RequestBody User user) {
         User tempPerson =  userService.persistUser(new User(
                 user.getFname(),
                 user.getLname(),
@@ -50,6 +52,7 @@ public class UserController {
                 user.getDobHolder(),
                 user.getPassword()
         ));
-        return new ResponseEntity<>(tempPerson, HttpStatus.CREATED);
+        //return new ResponseEntity<>(tempPerson, HttpStatus.CREATED);
+        return "FirstName: " + tempPerson.getFname() + " LastName: " + tempPerson.getLname() + " Email: " + tempPerson.getEmail() + " UserID: " + tempPerson.getUserid();
     }
 }
