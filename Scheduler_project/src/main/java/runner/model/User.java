@@ -1,9 +1,8 @@
 package runner.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import runner.service.ArgonSingleton;
 
 import java.io.Serializable;
@@ -33,17 +32,21 @@ public class User implements Serializable {
     @Column(name = "userid", nullable = false)
     private String userid;
 
+    @JsonIgnore
     @Column(name = "password", nullable = false)
     private String password;
 
     //Examples on how to utilize date/timestamp in Postgre https://www.postgresql.org/docs/current/datatype-datetime.html
+    @JsonIgnore
     @Column(name = "dob", nullable = false)
     private Date dob;//object for date of birth
 
+    @JsonIgnore
     public transient String dobHolder;
 
     // Sample date 9/16/2024 4:51 PM
     // TODO: remove the time from birth of date formatter
+    @JsonIgnore
     private transient final SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy H:mm a");
 
     public User() {}

@@ -51,12 +51,8 @@ public class UserProfile {
     private transient final SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 
     public UserProfile() {}
-    public UserProfile (String fname, String lname, String email, String dobHolder) {
-        this.fname = fname;
-        this.lname = lname;
-        this.email = email;
-        this.id = UUID.randomUUID();
-        setDob(dobHolder);
+    public UserProfile (String desc) {
+        this.desc = desc;
     }
 
     private int computeAge() {//takes a date obj from above

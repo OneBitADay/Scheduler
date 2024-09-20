@@ -28,8 +28,8 @@ public class Event {
     }
 
     @Id
-    @Column(name = "event_id")
-    UUID id;
+    @Column(name = "eventId")
+    UUID eventId;
 
     @Column(name = "name_of_event", nullable = false)
     String nameOfEvent;
@@ -54,7 +54,7 @@ public class Event {
 
 
     public Event () {
-        this.id = UUID.randomUUID();
+        this.eventId = UUID.randomUUID();
     }
 
     public Event (String nameOfEvent, String address, String dateStart, String dateEnd) {

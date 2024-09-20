@@ -27,14 +27,15 @@ public class UserController {
 
 
     @GetMapping(value = "/user/{userid}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public UserResponse getUser(@PathVariable String userid) {
+    //@ResponseBody
+    public ResponseEntity<User> getUser(@PathVariable String userid) {
         User user = userService.getUser(userid);
-        return UserResponse.Builder.newInstance()
+        UserResponse response =  UserResponse.Builder.newInstance()
                            .setUserId(userid)
                            .setFirstName(user.getFname())
                            .setLastName(user.getLname())
                            .build();
+        return new ResponseEntity<>(user, HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/user/{userid}")
