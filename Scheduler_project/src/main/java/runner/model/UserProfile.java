@@ -35,8 +35,8 @@ public class UserProfile {
     @Column(name = "age")
     private int age;
 
+    @ManyToMany
     @Column(name = "list_of_events")
-    @ElementCollection
     @CollectionTable(name = "list_of_events", joinColumns = @JoinColumn(name = "id"))
     private List<Event> listOfEvents;
 

@@ -47,10 +47,10 @@ public class Event {
     Date dateEnd; // date of ending DATE and TIME
 
 
-    @ElementCollection
+    @ManyToMany
     @CollectionTable(name = "event_attendees", joinColumns = @JoinColumn(name = "event_id"))
     @Column(name = "event_attendees", nullable = true)
-    List<User> eventAttendees;
+    List<UserProfile> eventAttendees;
 
 
     public Event () {
@@ -73,7 +73,7 @@ public class Event {
         this.dateEnd = dateEnd;
         this.desc = desc;
     }
-    public Event (String nameOfEvent, String address, Date dateStart, Date dateEnd, String desc, List<User> eventAttendees) {
+    public Event (String nameOfEvent, String address, Date dateStart, Date dateEnd, String desc, List<UserProfile> eventAttendees) {
         this();
         this.nameOfEvent = nameOfEvent;
         this.address = address;
@@ -84,7 +84,7 @@ public class Event {
     }
 
 
-    public List<User> getEventAttendees() {
+    public List<UserProfile> getEventAttendees() {
         if(this.eventAttendees == null) {
             this.eventAttendees = new ArrayList<>();
         }

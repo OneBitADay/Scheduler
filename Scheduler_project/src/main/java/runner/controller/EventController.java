@@ -4,14 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import runner.model.Event;
+import runner.model.UserProfile;
 import runner.service.EventService;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
 public class EventController {
 
+    @Autowired
+    EventService eventService;
 
     /**
      * GET:
@@ -26,32 +30,33 @@ public class EventController {
      *      /events -- create a bulk of events
      * PUT
      *      /event -- edit event name, location, type and details, time start, time end
-     *      /event -- append or remove users that'll be attending event
+     *      /event/addAttendees -- append users that'll be attending event
+     *      /event/removeAttendees -- remove users that'll be attending event
      */
 
 
-    @Autowired
-    EventService eventService;
-
     @GetMapping("/event")
-    public ResponseEntity<List<Event>> getEvents(@PathVariable String eventId) {
+    public ResponseEntity<List<Event>> getEvents(@PathVariable UUID eventId) {
         return null;
     }
+
     @GetMapping("/event/{eventId}")
-    public ResponseEntity<Event> getEvent(@PathVariable String eventId) {
+    public ResponseEntity<Event> getEvent(@PathVariable UUID eventId) {
         return null;
     }
+
     @GetMapping("/event/{eventId}/users")
     public ResponseEntity<Event> getAllAttendeesForEvent(@PathVariable String eventId) {
         return null;
     }
 
     @DeleteMapping("/event/{eventId}")
-    public ResponseEntity<Boolean> purgeEvent(@PathVariable String eventId) {
+    public ResponseEntity<Boolean> purgeEvent(@PathVariable UUID eventId) {
         return null;
     }
+
     @DeleteMapping("/event/{eventId}/{userId}")
-    public ResponseEntity<Boolean> purgeAttendeeAtEvent(@PathVariable String eventId, @PathVariable String userId) {
+    public ResponseEntity<Boolean> purgeAttendeeAtEvent(@PathVariable UUID eventId, @PathVariable String userId) {
         return null;
     }
 
@@ -62,6 +67,16 @@ public class EventController {
 
     @PutMapping("/event")
     public ResponseEntity<Event> updateEvent (@RequestBody Event event) {
+        return null;
+    }
+
+    @PutMapping("/event/addAttendees")
+    public ResponseEntity<Boolean> addAttendeesToEvent(@RequestBody UUID eventId, @RequestBody List<UserProfile> attendees) {
+        return null;
+    }
+
+    @PutMapping("/event/removeAttendees")
+    public ResponseEntity<Boolean> removeAttendeesFromEvent(@RequestBody UUID eventId, @RequestBody List<UserProfile> attendees) {
         return null;
     }
 }
