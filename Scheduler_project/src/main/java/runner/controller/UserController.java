@@ -9,7 +9,7 @@ import runner.model.User;
 import runner.response.UserResponse;
 import runner.service.UserService;
 
-import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
@@ -32,8 +32,8 @@ public class UserController {
         User user = userService.getUser(userid);
         UserResponse response =  UserResponse.Builder.newInstance()
                            .setUserId(userid)
-                           .setFirstName(user.getFname())
-                           .setLastName(user.getLname())
+                           .setFirstName(user.getFirstName())
+                           .setLastName(user.getLastName())
                            .build();
         return new ResponseEntity<>(user, HttpStatus.ACCEPTED);
     }
@@ -41,6 +41,12 @@ public class UserController {
     @DeleteMapping("/user/{userid}")
     public ResponseEntity<Boolean> removeUser(@PathVariable String userid) {
         return new ResponseEntity<>(userService.purgeUser(userid), HttpStatus.ACCEPTED);
+    }
+
+    @DeleteMapping("/user/uuid/{uuid}")
+    public ResponseEntity<Boolean> removeUserViaUuid(@PathVariable UUID uuid) {
+        return new ResponseEntity<>(userService.purgeUserByUuid(uuid), HttpStatus.ACCEPTED);
+
     }
 
     @PutMapping("/user")
@@ -51,14 +57,7 @@ public class UserController {
 
     @PostMapping(value = "/user")
     public ResponseEntity<Boolean> persistUser(@RequestBody User user) {
-        userService.persistUser(new User(
-                user.getFname(),
-                user.getLname(),
-                user.getEmail(),
-                user.getUserid(),
-                user.getDobHolder(),
-                user.getPassword()
-        ));
+        userService.persistUser(user);
         return new ResponseEntity<>(true, HttpStatus.CREATED);
     }
 }

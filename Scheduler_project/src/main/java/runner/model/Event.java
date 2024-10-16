@@ -2,9 +2,14 @@ package runner.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.apache.catalina.Service;
+import org.hibernate.annotations.UuidGenerator;
 import runner.util.DateUtil;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -14,7 +19,7 @@ import java.util.*;
 @Data
 @Entity
 @Table(name = "event")
-public class Event {
+public class Event implements Serializable {
     enum EVENTTYPES {
         AWAYEVENT, //Services
         HOMEEVENT, //Place Rental
@@ -28,44 +33,61 @@ public class Event {
     }
 
     @Id
-    @Column(name = "eventId")
-    UUID eventId;
+    @UuidGenerator
+    @Column(name = "event_id")
+    private UUID eventId;
 
     @Column(name = "name_of_event", nullable = false)
-    String nameOfEvent;
+    private String nameOfEvent;
 
     @Column(name = "address", nullable = false)
-    String address; // TODO should address be it's own class? Maybe Address class?
+    private String address; // TODO should address be it's own class? Maybe Address class?
 
-    @Column(name = "desc", nullable = true)
-    String desc; // Description of event -- OPTIONAL?
+    @Column(name = "about")
+    private String desc; // Description of event -- OPTIONAL?
 
     @Column(name = "date_start", nullable = false)
-    Date dateStart; // date of starting DATE and TIME
+    private LocalDate dateStart; // date of starting DATE and TIME
 
     @Column(name = "date_end", nullable = false)
-    Date dateEnd; // date of ending DATE and TIME
+    private LocalDate dateEnd; // date of ending DATE and TIME
+
+    @Column(name = "type_of_event", nullable = false)
+    private String typeOfEvent;
+
+    @Column(name = "type_of_service", nullable = false)
+    private String typeOfService;
+
+    @Column(name = "owner", nullable = false)
+    private UUID owner;
+
+
 
 
     @ManyToMany
     @CollectionTable(name = "event_attendees", joinColumns = @JoinColumn(name = "event_id"))
     @Column(name = "event_attendees", nullable = true)
-    List<UserProfile> eventAttendees;
+    Set<User> eventAttendees;
 
 
     public Event () {
-        this.eventId = UUID.randomUUID();
     }
 
     public Event (String nameOfEvent, String address, String dateStart, String dateEnd) {
         this();
         this.nameOfEvent = nameOfEvent;
         this.address = address;
-        this.dateStart = DateUtil.StringToDate(new SimpleDateFormat("MM/dd/yyyy H:mm a"),dateStart).orElse(null);
-        this.dateEnd = DateUtil.StringToDate(new SimpleDateFormat("MM/dd/yyyy H:mm a"),dateEnd).orElse(null);
+        this.dateStart = DateUtil.StringToDate(
+                DateTimeFormatter.ofPattern("MM/dd/yyyy H:mm a"),
+                DateTimeFormatter.ofPattern("MM/dd/yyyy H:mm a"),
+                dateStart).orElse(null);
+        this.dateEnd = DateUtil.StringToDate(
+                DateTimeFormatter.ofPattern("MM/dd/yyyy H:mm a"),
+                DateTimeFormatter.ofPattern("MM/dd/yyyy H:mm a"),
+                dateEnd).orElse(null);
     }
 
-    public Event (String nameOfEvent, String address, Date dateStart, Date dateEnd, String desc ) {
+    public Event (String nameOfEvent, String address, LocalDate dateStart, LocalDate dateEnd, String desc ) {
         this();
         this.nameOfEvent = nameOfEvent;
         this.address = address;
@@ -73,7 +95,7 @@ public class Event {
         this.dateEnd = dateEnd;
         this.desc = desc;
     }
-    public Event (String nameOfEvent, String address, Date dateStart, Date dateEnd, String desc, List<UserProfile> eventAttendees) {
+    public Event (String nameOfEvent, String address, LocalDate dateStart, LocalDate dateEnd, String desc, List<User> eventAttendees) {
         this();
         this.nameOfEvent = nameOfEvent;
         this.address = address;
@@ -84,9 +106,9 @@ public class Event {
     }
 
 
-    public List<UserProfile> getEventAttendees() {
+    public Set<User> getEventAttendees() {
         if(this.eventAttendees == null) {
-            this.eventAttendees = new ArrayList<>();
+            this.eventAttendees = new HashSet<>();
         }
 
         return this.eventAttendees;

@@ -1,7 +1,7 @@
 package runner.service;
 
 import runner.model.Event;
-import runner.model.UserProfile;
+import runner.model.User;
 
 import java.util.List;
 import java.util.UUID;
@@ -11,6 +11,6 @@ public interface EventService  {
     Event getEvent(UUID eventid);
 
     Boolean updateEvent(UUID eventid, Event event);
-    Boolean addAttendeesToEvent(UUID eventid, List<UserProfile> attendees);
-    boolean removeAttendeesFromEvent(UUID eventid, List<UserProfile> attendees);
+    Boolean addAttendeesToEvent(UUID eventid, List<User> attendees);
+    boolean removeAttendeesFromEvent(UUID eventid, List<User> attendees);
 }

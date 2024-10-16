@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import runner.model.Event;
-import runner.model.UserProfile;
+import runner.model.User;
 import runner.service.EventService;
 
 import java.util.List;
@@ -61,7 +61,8 @@ public class EventController {
     }
 
     @PostMapping("/event")
-    public ResponseEntity<Event> purgeEvent(@RequestBody Event event) {
+    public ResponseEntity<Event> persistEvent(@RequestBody Event event) {
+        eventService.persistEvent(event);
         return null;
     }
 
@@ -71,12 +72,12 @@ public class EventController {
     }
 
     @PutMapping("/event/addAttendees")
-    public ResponseEntity<Boolean> addAttendeesToEvent(@RequestBody UUID eventId, @RequestBody List<UserProfile> attendees) {
+    public ResponseEntity<Boolean> addAttendeesToEvent(@RequestBody UUID eventId, @RequestBody List<User> attendees) {
         return null;
     }
 
     @PutMapping("/event/removeAttendees")
-    public ResponseEntity<Boolean> removeAttendeesFromEvent(@RequestBody UUID eventId, @RequestBody List<UserProfile> attendees) {
+    public ResponseEntity<Boolean> removeAttendeesFromEvent(@RequestBody UUID eventId, @RequestBody List<User> attendees) {
         return null;
     }
 }

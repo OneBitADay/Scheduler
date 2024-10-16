@@ -3,83 +3,79 @@ package runner.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.UuidGenerator;
 import runner.service.ArgonSingleton;
+import runner.util.DateUtil;
 
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
-@Data
+
+
 @Entity
+@Data
 @Table(name = "users")
 public class User implements Serializable {
-
     @Id
-    @Column(name = "id")
-    private UUID id;
+    @UuidGenerator
+    @Column(name="useruuid")
+    private UUID useruuid;
 
-    @Column(name = "fname", nullable = false)
-    private String fname;
-
-    @Column(name = "lname", nullable = false)
-    private String lname;
-
-    @Column(name = "email", nullable = false)
+    private String firstName;
+    private String lastName;
     private String email;
+    private String userId;
 
-    @Column(name = "userid", nullable = false)
-    private String userid;
+    //Examples on how to utilize date/timestamp in Postgre https://www.postgresql.org/docs/current/datatype-datetime.html
+    private LocalDate dateOfBirth;
 
-    @JsonIgnore
+
     @Column(name = "password", nullable = false)
     private String password;
 
-    //Examples on how to utilize date/timestamp in Postgre https://www.postgresql.org/docs/current/datatype-datetime.html
-    @JsonIgnore
-    @Column(name = "dob", nullable = false)
-    private Date dob;//object for date of birth
+    private transient String dobHolder;
 
-    @JsonIgnore
-    public transient String dobHolder;
+    @Column(name = "aboutme")
+    private String desc;
 
-    // Sample date 9/16/2024 4:51 PM
-    // TODO: remove the time from birth of date formatter
-    @JsonIgnore
-    private transient final SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy H:mm a");
+    private transient int age;
 
-    public User() {}
-    public User (String fname, String lname, String email, String userid, String dobHolder, String password) {
-        this.fname = fname;
-        this.lname = lname;
-        this.email = email;
-        this.userid = userid;
-        this.id = UUID.randomUUID();
-        setDob(dobHolder);
-        setPassword(password);
+    @ManyToMany
+    @Column(name = "list_of_events")
+    @CollectionTable(name = "list_of_events", joinColumns = @JoinColumn(name = "userUUID"))
+    private List<Event> events;
+
+    public User() {
+
     }
 
-    private int computeAge() {//takes a date obj from above
-        return 0;
-    }
-
-    public void setPassword(String password) {
+    private void setPassword(String password) {
         this.password = ArgonSingleton.getInstance().encode(password);
     }
 
-    public void setDob(Date dob) {
-        this.dob = dob;
+//    public void setDateOfBirth(String date) {
+//        this.setDateOfBirth(DateUtil.StringToDate(
+//                DateTimeFormatter.ofPattern("MM/dd/yyyy"),
+//                DateTimeFormatter.ofPattern("MM/dd/yyyy"),
+//                date).orElse(null));
+//    }
+
+    public String getPassword() {
+        return password;
     }
 
-    private void setDob(String date) {
+    public String getDobHolder() {
+        return dobHolder;
+    }
 
-        Date retDate = null;
-        try {
-            retDate = this.sdf.parse(date);
-        }catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-        this.dob = retDate;
+    public void setDobHolder(String dobHolder) {
+        this.dobHolder = dobHolder;
     }
 }

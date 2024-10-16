@@ -6,22 +6,36 @@ import runner.Execeptions.eventExceptions.EventAlreadyExists;
 import runner.Execeptions.eventExceptions.EventIdProvidedisNull;
 import runner.Execeptions.eventExceptions.EventNotFound;
 import runner.model.Event;
-import runner.model.UserProfile;
+import runner.model.User;
 import runner.repository.EventRepository;
+import runner.repository.UserRepository;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
-public class EventServiceImpl implements EventService{
+public class EventServiceImpl implements EventService {
 
     @Autowired
     private EventRepository eventRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public Event persistEvent(Event event) {
         verificationProcess(event);
+        if(event.getDesc() == null || event.getDesc().isEmpty()) {
+            event.setDesc("Description not provided.");
+        }
+
+        User user = userRepository.findByUseruuid(event.getOwner());
+
+        event.getEventAttendees().add(user);
+        user.getEvents().add(event);
+
         eventRepository.save(event);
+        userRepository.save(user);
         return event;
     }
 
@@ -73,7 +87,7 @@ public class EventServiceImpl implements EventService{
     }
 
     @Override
-    public Boolean addAttendeesToEvent(UUID eventid, List<UserProfile> attendees) {
+    public Boolean addAttendeesToEvent(UUID eventid, List<User> attendees) {
         List<Event> events = eventRepository.findByEventId(eventid);
         Event event = events.get(0);
         verificationProcess(event);
@@ -84,7 +98,7 @@ public class EventServiceImpl implements EventService{
     }
 
     @Override
-    public boolean removeAttendeesFromEvent(UUID eventid, List<UserProfile> attendees) {
+    public boolean removeAttendeesFromEvent(UUID eventid, List<User> attendees) {
         List<Event> events = eventRepository.findByEventId(eventid);
         Event event = events.get(0);
         verificationProcess(event);

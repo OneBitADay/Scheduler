@@ -7,15 +7,22 @@ import runner.model.User;
 import runner.repository.UserRepository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
     UserRepository userRepository;
 
+
+    //TODO:CHECK TO SEE IF EMAIL PROVIDED IS ALREADY IN USE
     public User persistUser(User user) {
-        verificationProcess(user);
+
+        //TODO : might have to implement a rollback feature
+
+        //verificationProcess(user);
         userRepository.save(user);
+
         return user;
     }
 
@@ -24,12 +31,12 @@ public class UserServiceImpl implements UserService {
         if(userid == null || userid.isEmpty()) {
             throw new UserProvidedIsNull("user id provided is empty. PLease provide a legit userid.");
         }
-        List<User> userRequested = userRepository.findByUserid(userid);
-        if(userRequested.isEmpty()) {
+        User userRequested = userRepository.findByUserId(userid);
+        if(userRequested == null) {
             throw new UserNotFound(String.format("User by the id %s is not found. Ensure id is correct or that the user has been created.",userid));
         }
 
-        return userRequested.get(0);
+        return userRequested;
     }
 
     @Override
@@ -38,24 +45,31 @@ public class UserServiceImpl implements UserService {
             throwErrorUserIDNotFound(userid);
         }
 
-        userRepository.deleteByUserid(userid);
+        userRepository.deleteByUserId(userid);
         return checkIfUserIdExists(userid);
     }
 
     @Override
+    public boolean purgeUserByUuid(UUID uuid) {
+
+        userRepository.deleteByUseruuid(uuid);
+        return userRepository.findByUseruuid(uuid) == null;
+    }
+
+    @Override
     public boolean updateUserPassword(User user) {
-        List<User> tempUser = userRepository.findByUserid(user.getUserid());
+        User userHolder = userRepository.findByUserId(user.getUserId());
 
         //TODO:TEST CASE -- WRITE A UNIT TEST CASE TO TEST IF TWO PASSWORD, BOTH SAME CHARS BUT DIFFERENT UPPER/LOWER CASE ARE EQUAL
-        if(tempUser.get(0).getPassword().equals(user.getPassword())) {
+        if(userHolder.getPassword().equals(user.getPassword())) {
             throw new UserPasswordIdentical("Please provide a new password. This one is in use.");
         }
 
-        user.setId(tempUser.get(0).getId());
-        user.setFname(tempUser.get(0).getFname());
-        user.setLname(tempUser.get(0).getLname());
-        user.setEmail(tempUser.get(0).getEmail());
-        user.setDob(tempUser.get(0).getDob());
+        user.setUseruuid(userHolder.getUseruuid());
+        user.setFirstName(userHolder.getFirstName());
+        user.setLastName(userHolder.getLastName());
+        user.setEmail(userHolder.getEmail());
+        //user.setDateOfBirth(userHolder.getDateOfBirth());
         userRepository.save(user);
         return true;
     }
@@ -72,26 +86,27 @@ public class UserServiceImpl implements UserService {
 
 
     private boolean checkIfUserExists(User User) {
-        List<User> tempList = userRepository.findByFnameAndLnameAndEmail(User.getFname(), User.getLname(), User.getEmail());
+        List<User> tempList = userRepository.findByFirstNameAndLastNameAndEmail(
+                User.getFirstName(), User.getLastName(), User.getEmail());
         return tempList.size() > 0;
     }
 
     private boolean checkIfUserIdExists(String userId) {
-        return userRepository.findByUserid(userId).size() > 0;
+        return userRepository.findByUserId(userId) != null;
     }
 
-    private void throwErrorUserIDNotFound(String userid) {
-        throw new UserIdAlreadyExists(String.format("The user id provided %s already exists",userid));
+    private void throwErrorUserIDNotFound(String userId) {
+        throw new UserIdAlreadyExists(String.format("The user id provided %s already exists",userId));
 
     }
     private void verificationProcess(User user) {
-        if(checkIfUserIdExists(user.getUserid())){
-            throwErrorUserIDNotFound(user.getUserid());
+        if(checkIfUserIdExists(user.getUserId())){
+            throwErrorUserIDNotFound(user.getUserId());
         }
 
         if (checkIfUserExists(user)) {
             throw new UserAlreadyExists(String.format("The user by the first name %s, last name %s, with email %s already exists. Please recovery your account.",
-                    user.getFname(),user.getLname(),user.getEmail()));
+                    user.getFirstName(),user.getLastName(),user.getEmail()));
         }
     }
 }

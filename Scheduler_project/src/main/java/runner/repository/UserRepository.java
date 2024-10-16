@@ -1,20 +1,25 @@
 package runner.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import runner.model.User;
 
+
 import java.util.List;
+import java.util.UUID;
 
-@Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
-    List<User> findByFnameAndLnameAndEmail(String fname, String lname, String email);
+public interface UserRepository extends JpaRepository<User,Integer> {
+    List<User> findByFirstNameAndLastNameAndEmail(String firstName, String LastName, String email);
 
-    List<User> findByUserid(String userid);
+    //List<User> findByUserId(String userId);
+
+    User findByUserId(String userId);
+    User findByUseruuid(UUID useruuid);
 
     @Transactional
-    void deleteByUserid(String userid);
+    void deleteByUserId(String userId);
 
+    @Transactional
+    void deleteByUseruuid(UUID useruuid);
 
 }
